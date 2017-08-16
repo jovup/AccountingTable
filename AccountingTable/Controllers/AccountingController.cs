@@ -1,25 +1,29 @@
 ﻿using AccountingTable.Models.ViewModels;
-using System;
-using System.Collections.Generic;
+using AccountingTable.Repositories;
+using AccountingTable.Services;
+using AutoMapper.QueryableExtensions;
+using MvcPaging;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace AccountingTable.Controllers
 {
     public class AccountingController : Controller
     {
-        public ActionResult Accounting( )
-        {
-            var fakeDataList = new List<AccountingViewModel>
-            {
-                new AccountingViewModel{Type="支出",Date=DateTime.Parse("2017/01/01"),Amount=1000},
-                new AccountingViewModel{Type="支出",Date=DateTime.Parse("2017/01/02"),Amount=500},
-                new AccountingViewModel{Type="支出",Date=DateTime.Parse("2017/01/03"),Amount=1500},
-                new AccountingViewModel{Type="支出",Date=DateTime.Parse("2017/01/04"),Amount=20000}
-            };
+        private readonly AccountService _accountService;
+        private const int PAGE_SIZE = 10;
 
-            return View( fakeDataList );
+        public AccountingController( )
+        {
+            var unitOfWork = new EFUnitOfWork( );
+            _accountService = new AccountService( unitOfWork );
+        }
+
+        public ActionResult Accounting( int? page )
+        {
+            var currentPage = page.HasValue ? page.Value - 1 : 0;
+            var result = _accountService.ReadAll( ).OrderBy( x => x.Dateee ).ProjectTo<AccountingViewModel>( );
+            return View( result.ToPagedList( currentPage, PAGE_SIZE ) );
         }
     }
 }

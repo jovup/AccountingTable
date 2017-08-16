@@ -1,11 +1,13 @@
-﻿@model IEnumerable<AccountingTable.Models.ViewModels.AccountingViewModel>
+﻿@using MvcPaging;
+@model IPagedList<AccountingTable.Models.ViewModels.AccountingViewModel>
 
 @{
     ViewBag.Title = "Accounting";
-    var number = 0;
+    var number = ( Model.PageNumber - 1 ) * 10;
 }
 
-@Html.Partial("_InputPartialView")
+<hr />
+@Html.Partial( "_InputPartialView" )
 
 <div class="row">
     <div class="col-md-12">
@@ -15,13 +17,13 @@
                     #
                 </th>
                 <th>
-                    @Html.DisplayNameFor( model => model.Type )
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Type )
                 </th>
                 <th>
-                    @Html.DisplayNameFor( model => model.Date )
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Date )
                 </th>
                 <th>
-                    @Html.DisplayNameFor( model => model.Amount )
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Amount )
                 </th>
             </tr>
 
@@ -43,7 +45,10 @@
                     </td>
                 </tr>
             }
-
         </table>
     </div>
+</div>
+
+<div class="pager">
+    @Html.Pager( Model.PageSize, Model.PageNumber, Model.TotalItemCount )
 </div>

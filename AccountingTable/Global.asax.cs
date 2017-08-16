@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AutoMapper;
+using AccountingTable.AutoMapper;
 
 namespace AccountingTable
 {
@@ -12,6 +14,8 @@ namespace AccountingTable
     {
         protected void Application_Start( )
         {
+            Mapper.Initialize( config => config.AddProfile<AutoMapperProfile>( ) );
+
             AreaRegistration.RegisterAllAreas( );
             FilterConfig.RegisterGlobalFilters( GlobalFilters.Filters );
             RouteConfig.RegisterRoutes( RouteTable.Routes );
