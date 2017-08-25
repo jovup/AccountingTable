@@ -19,5 +19,15 @@ namespace AccountingTable.Services
         {
             return _accountBookRepo.ReadAll( );
         }
+
+        public void Create( AccountBook inputData )
+        {
+            _accountBookRepo.Create( inputData );
+        }
+
+        public void Save( )
+        {
+            _accountBookRepo.SaveChanges( );
+        }
     }
 }

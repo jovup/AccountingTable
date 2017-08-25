@@ -1,0 +1,83 @@
+﻿@using MvcPaging
+@using AccountingTable.Models
+@using AccountingTable.Models.ViewModels
+@model IPagedList<AccountingViewModel>
+
+@{
+    var number = ( Model.PageNumber - 1 ) * 10;
+}
+
+@helper createTable( int number, AccountingViewModel accountingViewModel, string color )
+{
+    <tr style="color:@color">
+        <td>
+            @number
+        </td>
+        <td>
+            @Html.DisplayFor( modelItem => accountingViewModel.Type )
+        </td>
+        <td>
+            @Html.DisplayFor( modelItem => accountingViewModel.Date )
+        </td>
+        <td>
+            @Html.DisplayFor( modelItem => accountingViewModel.Amount )
+        </td>
+    </tr>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Type )
+                </th>
+                <th>
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Date )
+                </th>
+                <th>
+                    @Html.DisplayNameFor( x => x.FirstOrDefault( ).Amount )
+                </th>
+            </tr>
+
+            @foreach ( var item in Model )
+            {
+                number++;
+                string color = string.Empty;
+                switch ( item.Type )
+                {
+                    case CategoryEnum.支出:
+                        color = "red";
+                        break;
+                    case CategoryEnum.收入:
+                        color = "blue";
+                        break;
+                }
+
+                <tr style="color:@color">
+                    <td>
+                        @number
+                    </td>
+                    <td>
+                        @Html.DisplayFor( modelItem => item.Type )
+                    </td>
+                    <td>
+                        @Html.DisplayFor( modelItem => item.Date )
+                    </td>
+                    <td>
+                        @Html.DisplayFor( modelItem => item.Amount )
+                    </td>
+                </tr>
+                //createTable( number, item, color );
+            }
+        </table>
+    </div>
+</div>
+
+<div class="pager">
+    @Html.Pager( Model.PageSize, Model.PageNumber, Model.TotalItemCount,
+    new AjaxOptions { UpdateTargetId = "accounting-table" } ).Options( x => x.Action( "Accounting" ) )
+</div>
